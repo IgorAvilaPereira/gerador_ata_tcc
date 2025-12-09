@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Gerador de Ata de Defesa</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 30px;
+        background: #f4f4f4;
+    }
+    .box {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 0 6px rgba(0,0,0,.2);
+    }
+    label { font-weight: bold; }
+    input, textarea {
+        width: 100%;
+        padding: 8px;
+        margin: 6px 0 12px 0;
+        border-radius: 5px;
+        border: 1px solid #aaa;
+    }
+    button {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border: none;
+        background: green;
+        color: white;
+        border-radius: 5px;
+        margin-right: 10px;
+    }
+    button:hover { background: #004999; }
+</style>
+</head>
+<body>
+
+<div class="box">
+    <h2>Gerador de Ata para TCC</h2> 
+    
+    <h3>Preencha os dados</h3>
+
+    <label>Nome do aluno:</label>
+    <input type="text" id="aluno">
+
+    <label>Título do TCC:</label>
+    <input type="text" id="titulo">
+
+    <label>Data da defesa:</label>
+    <input type="text" id="data">
+
+    <label>Horário da defesa:</label>
+    <input type="text" id="horario" placeholder="ex: 19:00 às 20:30">
+
+    <label>Presidente da banca:</label>
+    <input type="text" id="presidente">
+
+    <label>Membro 1:</label>
+    <input type="text" id="membro1">
+
+    <label>Membro 2:</label>
+    <input type="text" id="membro2">
+
+    <label>Resultado da defesa:</label><br>
+    <input type="radio" name="resultado" value="aprovado"> Aprovado<br>
+    <input type="radio" name="resultado" value="aprovado com ressalvas"> Aprovado com ressalvas<br>
+    <input type="radio" name="resultado" value="reprovado"> Reprovado<br><br>
+
+    <label>Nota Final:</label>
+    <input type="text" id="nota" placeholder="ex: 9.5">
+
+    <button onclick="abrirAta()">Abrir Ata</button>
+</div>
+
+
+<script>
+function dataHojePorExtenso() {
+    const meses = [
+        "janeiro","fevereiro","março","abril","maio","junho",
+        "julho","agosto","setembro","outubro","novembro","dezembro"
+    ];
+
+    const hoje = new Date();
+    const dia = hoje.getDate();
+    const mes = meses[hoje.getMonth()];
+    const ano = hoje.getFullYear();
+
+    return `${dia} de ${mes} de ${ano}`;
+}
+
+window.onload = () => {
+    document.getElementById("data").value = dataHojePorExtenso();
+    document.getElementById("horario").value = "19:00";
+};
+
+function abrirAta() {
+    const aluno = document.getElementById("aluno").value;
+    const titulo = document.getElementById("titulo").value;
+    const data = document.getElementById("data").value;
+    const horario = document.getElementById("horario").value;
+    const presidente = document.getElementById("presidente").value;
+    const membro1 = document.getElementById("membro1").value;
+    const membro2 = document.getElementById("membro2").value;
+    const nota = document.getElementById("nota").value || "_____________";
+
+    const resultadoEscolhido = document.querySelector('input[name="resultado"]:checked');
+    const resultadoTexto = resultadoEscolhido ? resultadoEscolhido.value : "_____________________";
+
+    const ata = `<center><img src='logo_ifrs.png' width='300px' height='80px'></center>
+<center><h2>Ata de Defesa Final de TCC<br>Tecnologia em Análise e Desenvolvimento de Sistemas</h2></center>
+<span style='text-align: justify;'>
+Aos ${data}, no horário das ${horario} horas, nas dependências do Instituto Federal de Educação, Ciência e Tecnologia do Rio Grande do Sul, foi realizada a defesa pública do Trabalho de Conclusão de Curso (TCC) do(a) aluno(a) <b>${aluno}</b>, intitulado <b>${titulo}</b>. 
+</span>
+<br>
+A Banca Examinadora, composta pelos professores: <b>${presidente}</b> (presidente), <b>${membro1}</b> e <b>${membro2}</b>, após avaliação e deliberação, considerou o trabalho:
+<br><br>
+<b>Resultado:</b> ${resultadoTexto}. <br>
+<b>Nota final:</b> ${nota}
+<br><br>
+<p>_____________________________________________________________<br>
+(Presidente) ${presidente}</p><br>
+<p>_____________________________________________________________<br>
+(Membro 1): ${membro1}</p><br>
+<p>_____________________________________________________________<br>
+(Membro 2): ${membro2}</p>
+`;
+
+    const novaJanela = window.open("", "_blank");
+    novaJanela.document.write(`
+        <html>
+        <head>
+            <title>Ata Gerada</title>
+            <style>
+                body { font-family: Arial; margin: 40px; }
+                #conteudo { white-space: pre-wrap; font-size: 17px; line-height: 1.4; }
+                p { margin: 4px 0; }   
+                h2 { margin: 5px 0; }  
+                br { line-height: 0.4; }
+                .btn-print {
+                    padding: 10px 18px;
+                    background: green;
+                    color: white;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    font-size: 16px;
+                    margin-bottom: 20px;
+                }
+                .btn-print:hover { background: #004999; }
+            </style>
+        </head>
+        <body>
+
+            <button class="btn-print" onclick="this.style.display='none'; window.print();">
+                Imprimir Ata
+            </button>
+
+            <div id="conteudo" contenteditable="true">${ata}</div>
+
+        </body>
+        </html>
+    `);
+    novaJanela.document.close();
+}
+</script>
+
+</body>
+</html>
+
