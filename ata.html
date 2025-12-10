@@ -2,173 +2,370 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Gerador de Ata de Defesa</title>
-
+<title>Gerador de Ata e Declarações — Gerar Tudo</title>
 <style>
     body {
         font-family: Arial, sans-serif;
-        margin: 30px;
+        margin: 24px;
         background: #f4f4f4;
+        color: #222;
     }
     .box {
-        background: white;
-        padding: 20px;
+        background: #fff;
+        padding: 18px;
         border-radius: 8px;
-        margin-bottom: 20px;
-        box-shadow: 0 0 6px rgba(0,0,0,.2);
+        margin-bottom: 18px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
     }
-    label { font-weight: bold; }
-    input, textarea {
-        width: 100%;
-        padding: 8px;
-        margin: 6px 0 12px 0;
-        border-radius: 5px;
-        border: 1px solid #aaa;
+    label { font-weight: 700; display:block; margin-top:8px; }
+    input, select, textarea {
+        width:100%;
+        padding:8px;
+        margin-top:6px;
+        border-radius:6px;
+        border:1px solid #bbb;
+        box-sizing: border-box;
     }
+    .row { display:flex; gap:12px; }
+    .col { flex:1; }
     button {
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-        border: none;
-        background: green;
+        padding:10px 16px;
+        background: #198754;
         color: white;
-        border-radius: 5px;
-        margin-right: 10px;
+        border: none;
+        border-radius:6px;
+        cursor: pointer;
+        font-size:15px;
+        margin-top:10px;
     }
-    button:hover { background: #004999; }
+    button.secondary { background:#0d6efd; }
+    button.warn { background:#dc3545; }
+    button:hover { opacity:0.95; }
+    small { color:#666; }
+    @media (max-width:700px) {
+        .row { flex-direction: column; }
+    }
 </style>
 </head>
 <body>
 
 <div class="box">
-    <h2>Gerador de Ata para TCC</h2> 
-    
-    <h3>Preencha os dados</h3>
+    <h2>Gerador de Ata para TCC</h2>
+    <p><small>Preencha a ATA — os campos relevantes serão usados automaticamente para gerar as declarações.</small></p>
 
     <label>Nome do aluno:</label>
-    <input type="text" id="aluno">
+    <input type="text" id="aluno" placeholder="Nome completo do(a) aluno(a)">
 
     <label>Título do TCC:</label>
-    <input type="text" id="titulo">
+    <input type="text" id="titulo" placeholder="Título completo do trabalho (sem abreviações)">
 
-    <label>Data da defesa:</label>
-    <input type="text" id="data">
+    <div class="row">
+        <div class="col">
+            <label>Data da defesa:</label>
+            <input type="text" id="data" placeholder="ex: 10 de dezembro de 2025">
+        </div>
+        <div class="col">
+            <label>Horário da defesa:</label>
+            <input type="text" id="horario" placeholder="ex: 19:00 às 20:30">
+        </div>
+    </div>
 
-    <label>Horário da defesa:</label>
-    <input type="text" id="horario" placeholder="ex: 19:00 às 20:30">
+    <label>Presidente / Orientador:</label>
+    <input type="text" id="presidente" placeholder="Ex: Prof. Dr. João Silva">
 
-    <label>Presidente da banca:</label>
-    <input type="text" id="presidente">
+    <label>Coorientador (opcional):</label>
+    <input type="text" id="coorientador" placeholder="Deixe vazio se não houver coorientador">
 
-    <label>Membro 1:</label>
-    <input type="text" id="membro1">
+    <label>Membro 1 (banca):</label>
+    <input type="text" id="membro1" placeholder="Nome completo">
 
-    <label>Membro 2:</label>
-    <input type="text" id="membro2">
+    <label>Membro 2 (banca):</label>
+    <input type="text" id="membro2" placeholder="Nome completo">
 
-    <label>Resultado da defesa:</label><br>
-    <input type="radio" name="resultado" value="aprovado"> Aprovado<br>
-    <input type="radio" name="resultado" value="aprovado com ressalvas"> Aprovado com ressalvas<br>
-    <input type="radio" name="resultado" value="reprovado"> Reprovado<br><br>
+    <label>Coordenador(a) do Curso (assinatura das declarações):</label>
+    <input type="text" id="coordenador" placeholder="Ex: Prof. (a) Coordenador(a)">
+
+    <label>Resultado da defesa:</label>
+    <div style="margin-top:6px">
+        <input type="radio" name="resultado" id="res_aprovado" value="aprovado"> <label style="display:inline; font-weight:normal;"> Aprovado</label> &nbsp;
+        <input type="radio" name="resultado" id="res_ressalvas" value="aprovado com ressalvas"> <label style="display:inline; font-weight:normal;"> Aprovado com ressalvas</label> &nbsp;
+        <input type="radio" name="resultado" id="res_reprovado" value="reprovado"> <label style="display:inline; font-weight:normal;"> Reprovado</label>
+    </div>
 
     <label>Nota Final:</label>
     <input type="text" id="nota" placeholder="ex: 9.5">
 
-    <button onclick="abrirAta()">Abrir Ata</button>
+    <div style="margin-top:12px;">
+        <button onclick="abrirAta()">Abrir ATA (individual)</button>
+        <button class="secondary" onclick="abrirDeclaracoesIndividuais()">Abrir Declarações (individual)</button>
+        <button class="warn" onclick="gerarTudo()">Gerar Tudo (ata + todas declarações)</button>
+    </div>
 </div>
 
+<div class="box">
+    <h3>Observações</h3>
+    <ul>
+        <li>Os campos <b>Aluno</b>, <b>Título</b>, <b>Presidente/Orientador</b>, <b>Coorientador</b>, <b>Membro1</b> e <b>Membro2</b> são usados automaticamente na geração.</li>
+        <li>As declarações seguem os títulos: <i>DECLARAÇÃO DE ORIENTAÇÃO</i>, <i>DECLARAÇÃO DE CO-ORIENTAÇÃO</i> e <i>DECLARAÇÃO DE PARTICIPAÇÃO COMO BANCA EXAMINADORA</i>.</li>
+        <li>Cada documento abre em nova janela/aba para permitir impressão individual.</li>
+    </ul>
+</div>
 
 <script>
 function dataHojePorExtenso() {
-    const meses = [
-        "janeiro","fevereiro","março","abril","maio","junho",
-        "julho","agosto","setembro","outubro","novembro","dezembro"
-    ];
-
+    const meses = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
     const hoje = new Date();
-    const dia = hoje.getDate();
-    const mes = meses[hoje.getMonth()];
-    const ano = hoje.getFullYear();
-
-    return `${dia} de ${mes} de ${ano}`;
+    return `${hoje.getDate()} de ${meses[hoje.getMonth()]} de ${hoje.getFullYear()}`;
 }
 
 window.onload = () => {
-    document.getElementById("data").value = dataHojePorExtenso();
-    document.getElementById("horario").value = "19:00";
+    // preenche datas padrão
+    if (!document.getElementById("data").value) document.getElementById("data").value = dataHojePorExtenso();
+    if (!document.getElementById("horario").value) document.getElementById("horario").value = "19:00";
+    // sincronizações automáticas
+    document.getElementById("aluno").addEventListener("input", e => {
+        // estudante em declarações será pega diretamente do campo aluno; mantemos campo separado não necessário
+    });
+    document.getElementById("titulo").addEventListener("input", e => {
+        // título é lido diretamente quando gerar declarações
+    });
+    document.getElementById("presidente").addEventListener("input", e => {
+        // orientador/ presidente será lido automaticamente
+    });
 };
 
-function abrirAta() {
-    const aluno = document.getElementById("aluno").value;
-    const titulo = document.getElementById("titulo").value;
-    const data = document.getElementById("data").value;
-    const horario = document.getElementById("horario").value;
-    const presidente = document.getElementById("presidente").value;
-    const membro1 = document.getElementById("membro1").value;
-    const membro2 = document.getElementById("membro2").value;
-    const nota = document.getElementById("nota").value || "_____________";
-
-    const resultadoEscolhido = document.querySelector('input[name="resultado"]:checked');
-    const resultadoTexto = resultadoEscolhido ? resultadoEscolhido.value : "_____________________";
-
-    const ata = `<center><img src='https://ifrs.edu.br/wp-content/uploads/2022/08/Logo-IFRS-cores-fundo-branco-Horizontal.jpg' width='300px' height='80px'></center>
-<center><h2>Ata de Defesa Final de TCC<br>Tecnologia em Análise e Desenvolvimento de Sistemas</h2></center>
-<span style='text-align: justify;'>
-Aos ${data}, no horário das ${horario} horas, nas dependências do Instituto Federal de Educação, Ciência e Tecnologia do Rio Grande do Sul, foi realizada a defesa pública do Trabalho de Conclusão de Curso (TCC) do(a) aluno(a) <b>${aluno}</b>, intitulado <b>${titulo}</b>. 
-</span>
-<br>
-A Banca Examinadora, composta pelos professores: <b>${presidente}</b> (presidente), <b>${membro1}</b> e <b>${membro2}</b>, após avaliação e deliberação, considerou o trabalho:
-<br><br>
-<b>Resultado:</b> ${resultadoTexto}. <br>
-<b>Nota final:</b> ${nota}
-<br><br>
-<p>_____________________________________________________________<br>
-(Presidente) ${presidente}</p><br>
-<p>_____________________________________________________________<br>
-(Membro 1): ${membro1}</p><br>
-<p>_____________________________________________________________<br>
-(Membro 2): ${membro2}</p>
-`;
-
-    const novaJanela = window.open("", "_blank");
-    novaJanela.document.write(`
+/* utilitário para abrir uma nova janela com conteúdo e botão imprimir */
+function openDocWindow(htmlContent, winTitle) {
+    const w = window.open("", "_blank");
+    if (!w) {
+        alert("Pop-up bloqueado. Permita pop-ups para abrir os documentos.");
+        return null;
+    }
+    w.document.write(`
         <html>
         <head>
-            <title>Ata Gerada</title>
+            <title>${winTitle}</title>
+            <meta charset="utf-8">
             <style>
-                body { font-family: Arial; margin: 40px; }
-                #conteudo { white-space: pre-wrap; font-size: 17px; line-height: 1.4; }
-                p { margin: 4px 0; }   
-                h2 { margin: 5px 0; }  
-                br { line-height: 0.4; }
-                .btn-print {
-                    padding: 10px 18px;
-                    background: green;
-                    color: white;
-                    border: none;
-                    border-radius: 5px;
-                    cursor: pointer;
-                    font-size: 16px;
-                    margin-bottom: 20px;
-                }
-                .btn-print:hover { background: #004999; }
+                body{font-family:Arial, sans-serif; margin:32px;}
+                #conteudo{white-space:pre-wrap; font-size:16px; line-height:1.45;}
+                .btn-print{padding:10px 16px; background:#198754; color:#fff; border:none; border-radius:6px; cursor:pointer; margin-bottom:16px;}
+                .btn-print:hover{opacity:0.95;}
             </style>
         </head>
         <body>
-
-            <button class="btn-print" onclick="this.style.display='none'; window.print();">
-                Imprimir Ata
-            </button>
-
-            <div id="conteudo" contenteditable="true">${ata}</div>
-
+            <button class="btn-print" onclick="this.style.display='none'; window.print();">Imprimir</button>
+            <div id="conteudo" contenteditable="true">${htmlContent}</div>
         </body>
         </html>
     `);
-    novaJanela.document.close();
+    w.document.close();
+    return w;
+}
+
+/* Gera o HTML da ATA */
+function gerarHtmlAta({aluno, titulo, data, horario, presidente, membro1, membro2, resultadoTexto, nota}) {
+    return `
+<center><img src="https://ifrs.edu.br/wp-content/uploads/2022/08/Logo-IFRS-cores-fundo-branco-Horizontal.jpg" width="300px" alt="Logo IFRS"></center>
+<center><h2>Ata de Defesa Final de TCC<br>Tecnologia em Análise e Desenvolvimento de Sistemas</h2></center>
+<p style="text-align:justify;">
+Aos ${data}, no horário das ${horario} horas, nas dependências do Instituto Federal de Educação, Ciência e Tecnologia do Rio Grande do Sul, foi realizada a defesa pública do Trabalho de Conclusão de Curso (TCC) do(a) aluno(a) <b>${escapeHtml(aluno)}</b>, intitulado <b>${escapeHtml(titulo)}</b>.
+</p>
+<p>A Banca Examinadora, composta pelos professores: <b>${escapeHtml(presidente)}</b> (presidente/orientador), <b>${escapeHtml(membro1)}</b> e <b>${escapeHtml(membro2)}</b>, após avaliação e deliberação, considerou o trabalho:</p>
+<p><b>Resultado:</b> ${escapeHtml(resultadoTexto)}. <br><b>Nota final:</b> ${escapeHtml(nota)}</p>
+<br>
+<p>_____________________________________________________________<br>(Presidente/Orientador) ${escapeHtml(presidente)}</p>
+<br>
+<p>_____________________________________________________________<br>(Membro 1) ${escapeHtml(membro1)}</p>
+<br>
+<p>_____________________________________________________________<br>(Membro 2) ${escapeHtml(membro2)}</p>
+`;
+}
+
+/* Gera HTML para declarações (orientação / coorientação / banca) */
+function gerarHtmlDeclaracao({tipo, professor, estudante, titulo, dataDefesa, coordenador}) {
+    const verbos = {
+        "orientação": "orientou o",
+        "co-orientação": "co-orientou o",
+        "banca examinadora": "participou como membro da banca examinadora do"
+    };
+    const tituloCabecalho = tipo.toUpperCase() === "CO-ORIENTAÇÃO" ? "DECLARAÇÃO DE CO-ORIENTAÇÃO" :
+                            tipo.toUpperCase() === "ORIENTAÇÃO" ? "DECLARAÇÃO DE ORIENTAÇÃO" :
+                            "DECLARAÇÃO DE PARTICIPAÇÃO COMO BANCA EXAMINADORA";
+
+    return `
+<center><img src="https://ifrs.edu.br/wp-content/uploads/2022/08/Logo-IFRS-cores-fundo-branco-Horizontal.jpg" width="300px" alt="Logo IFRS"></center>
+<h2 style="text-align:center;">${tituloCabecalho}<br>DE TRABALHO DE CONCLUSÃO DE CURSO</h2>
+<p style="text-align:justify;">
+A Coordenação do Curso Superior de Tecnologia em Análise e Desenvolvimento de Sistemas do Instituto Federal de Ciência e Tecnologia do Rio Grande do Sul - Campus Rio Grande, declara para os devidos fins que <b>${escapeHtml(professor)}</b> ${verbos[tipo]} trabalho de conclusão de curso de <b>${escapeHtml(estudante)}</b>, intitulado <b>${escapeHtml(titulo)}</b>, com defesa realizada no dia ${escapeHtml(dataDefesa)}, nas dependências do Instituto Federal de Educação, Ciência e Tecnologia do Rio Grande do Sul no Campus Rio Grande.
+</p>
+<br><br>
+<p>Rio Grande, ${dataHojePorExtenso()}.</p>
+<br><br><br>
+______________________________________________________<br>
+${escapeHtml(coordenador)}<br>
+Coordenador(a) de Curso
+`;
+}
+
+/* função utilitária para escapar HTML (evita injeção acidental de tags) */
+function escapeHtml(str) {
+    if (!str && str !== 0) return "";
+    return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+/* lê campos do formulário */
+function lerCampos() {
+    const aluno = document.getElementById("aluno").value.trim();
+    const titulo = document.getElementById("titulo").value.trim();
+    const data = document.getElementById("data").value.trim();
+    const horario = document.getElementById("horario").value.trim();
+    const presidente = document.getElementById("presidente").value.trim();
+    const coorientador = document.getElementById("coorientador").value.trim();
+    const membro1 = document.getElementById("membro1").value.trim();
+    const membro2 = document.getElementById("membro2").value.trim();
+    const coordenador = document.getElementById("coordenador").value.trim();
+    const nota = document.getElementById("nota").value.trim() || "_____________";
+
+    const resultadoEl = document.querySelector('input[name="resultado"]:checked');
+    const resultadoTexto = resultadoEl ? resultadoEl.value : "_____________________";
+
+    return { aluno, titulo, data, horario, presidente, coorientador, membro1, membro2, coordenador, nota, resultadoTexto };
+}
+
+/* Abre apenas a ATA em nova janela */
+function abrirAta() {
+    const campos = lerCampos();
+    if (!campos.aluno || !campos.titulo) {
+        if (!confirm("Aluno e/ou Título vazios. Deseja prosseguir mesmo assim?")) return;
+    }
+    const html = gerarHtmlAta(campos);
+    openDocWindow(html, "Ata de Defesa - " + (campos.aluno || "TCC"));
+}
+
+/* Abre declarações individuais (orientador, coorientador se existir, membro1, membro2) */
+function abrirDeclaracoesIndividuais() {
+    const c = lerCampos();
+    if (!c.aluno || !c.titulo) {
+        if (!confirm("Aluno e/ou título vazios. Deseja prosseguir mesmo assim?")) return;
+    }
+
+    // Orientador / Presidente
+    const htmlOrient = gerarHtmlDeclaracao({
+        tipo: "orientação",
+        professor: c.presidente,
+        estudante: c.aluno,
+        titulo: c.titulo,
+        dataDefesa: c.data,
+        coordenador: c.coordenador || ""
+    });
+    openDocWindow(htmlOrient, "Declaração de Orientação - " + (c.presidente || "Orientador"));
+
+    // Coorientador (opcional)
+    if (c.coorientador) {
+        const htmlCoor = gerarHtmlDeclaracao({
+            tipo: "co-orientação",
+            professor: c.coorientador,
+            estudante: c.aluno,
+            titulo: c.titulo,
+            dataDefesa: c.data,
+            coordenador: c.coordenador || ""
+        });
+        openDocWindow(htmlCoor, "Declaração de Co-Orientação - " + c.coorientador);
+    }
+
+    // Membro 1
+    if (c.membro1) {
+        const htmlM1 = gerarHtmlDeclaracao({
+            tipo: "banca examinadora",
+            professor: c.membro1,
+            estudante: c.aluno,
+            titulo: c.titulo,
+            dataDefesa: c.data,
+            coordenador: c.coordenador || ""
+        });
+        openDocWindow(htmlM1, "Declaração - Membro 1 - " + c.membro1);
+    }
+
+    // Membro 2
+    if (c.membro2) {
+        const htmlM2 = gerarHtmlDeclaracao({
+            tipo: "banca examinadora",
+            professor: c.membro2,
+            estudante: c.aluno,
+            titulo: c.titulo,
+            dataDefesa: c.data,
+            coordenador: c.coordenador || ""
+        });
+        openDocWindow(htmlM2, "Declaração - Membro 2 - " + c.membro2);
+    }
+}
+
+/* Gera tudo: abre ATA + declarações em janelas separadas */
+function gerarTudo() {
+    const c = lerCampos();
+    if (!c.aluno || !c.titulo) {
+        if (!confirm("Aluno e/ou Título estão vazios. Deseja gerar os documentos mesmo assim?")) return;
+    }
+
+    // abrir ATA
+    const htmlAta = gerarHtmlAta(c);
+    openDocWindow(htmlAta, "Ata de Defesa - " + (c.aluno || "TCC"));
+
+    // abrir declaração do orientador (presidente)
+    const htmlOrient = gerarHtmlDeclaracao({
+        tipo: "orientação",
+        professor: c.presidente,
+        estudante: c.aluno,
+        titulo: c.titulo,
+        dataDefesa: c.data,
+        coordenador: c.coordenador || ""
+    });
+    openDocWindow(htmlOrient, "Declaração de Orientação - " + (c.presidente || "Orientador"));
+
+    // abrir coorientador (se tiver)
+    if (c.coorientador) {
+        const htmlCoor = gerarHtmlDeclaracao({
+            tipo: "co-orientação",
+            professor: c.coorientador,
+            estudante: c.aluno,
+            titulo: c.titulo,
+            dataDefesa: c.data,
+            coordenador: c.coordenador || ""
+        });
+        openDocWindow(htmlCoor, "Declaração de Co-Orientação - " + c.coorientador);
+    }
+
+    // membros da banca
+    if (c.membro1) {
+        const htmlM1 = gerarHtmlDeclaracao({
+            tipo: "banca examinadora",
+            professor: c.membro1,
+            estudante: c.aluno,
+            titulo: c.titulo,
+            dataDefesa: c.data,
+            coordenador: c.coordenador || ""
+        });
+        openDocWindow(htmlM1, "Declaração - Membro 1 - " + c.membro1);
+    }
+    if (c.membro2) {
+        const htmlM2 = gerarHtmlDeclaracao({
+            tipo: "banca examinadora",
+            professor: c.membro2,
+            estudante: c.aluno,
+            titulo: c.titulo,
+            dataDefesa: c.data,
+            coordenador: c.coordenador || ""
+        });
+        openDocWindow(htmlM2, "Declaração - Membro 2 - " + c.membro2);
+    }
 }
 </script>
 
 </body>
 </html>
-
