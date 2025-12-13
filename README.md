@@ -121,8 +121,4 @@ Uso permitido para fins **acadêmicos, administrativos e institucionais**.
 
 Este projeto pode ser reutilizado e adaptado, desde que respeitadas as normas internas da instituição.
 
----
 
-## ✍️ Resumo Executivo
-
-> Aplicação web institucional para geração automática, padronizada e segura de atas e declarações de defesa de TCC, pronta para uso acadêmico e administrativo.
