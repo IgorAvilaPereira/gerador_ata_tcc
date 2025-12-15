@@ -170,8 +170,8 @@ function gerarHtmlAta({aluno, titulo, data, horario, presidente, membro1, membro
 <center><h2>Ata de Defesa Final de TCC<br>Tecnologia em Análise e Desenvolvimento de Sistemas</h2></center>
 <p style="text-align:justify;">
 Aos ${data}, no horário das ${horario} horas, nas dependências do Instituto Federal de Educação, Ciência e Tecnologia do Rio Grande do Sul, foi realizada a defesa pública do Trabalho de Conclusão de Curso (TCC) do(a) aluno(a) <b>${escapeHtml(aluno)}</b>, intitulado <b>${escapeHtml(titulo)}</b>.
-</p>
-<p>A Banca Examinadora, composta pelos professores: <b>${escapeHtml(presidente)}</b> (presidente/orientador), <b>${escapeHtml(membro1)}</b> e <b>${escapeHtml(membro2)}</b>, após avaliação e deliberação, considerou o trabalho:</p>
+<br>
+A Banca Examinadora, composta pelos professores: <b>${escapeHtml(presidente)}</b> (presidente/orientador), <b>${escapeHtml(membro1)}</b> e <b>${escapeHtml(membro2)}</b>, após avaliação e deliberação, considerou o trabalho:</p>
 <p><b>Resultado:</b> ${escapeHtml(resultadoTexto)}. <br><b>Nota final:</b> ${escapeHtml(nota)}</p>
 <br>
 <p>_____________________________________________________________<br>(Presidente/Orientador) ${escapeHtml(presidente)}</p>
