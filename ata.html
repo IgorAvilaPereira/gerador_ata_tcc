@@ -106,7 +106,7 @@
     <h3>Observações</h3>
     <ul>
         <li>Os campos <b>Aluno</b>, <b>Título</b>, <b>Presidente/Orientador</b>, <b>Coorientador</b>, <b>Membro1</b> e <b>Membro2</b> são usados automaticamente na geração.</li>
-        <li>As declarações seguem os títulos: <i>DECLARAÇÃO DE ORIENTAÇÃO</i>, <i>DECLARAÇÃO DE CO-ORIENTAÇÃO</i> e <i>DECLARAÇÃO DE PARTICIPAÇÃO COMO BANCA EXAMINADORA</i>.</li>
+        <li>As declarações seguem os títulos: <i>DECLARAÇÃO DE ORIENTAÇÃO</i>, <i>DECLARAÇÃO DE COORIENTAÇÃO</i> e <i>DECLARAÇÃO DE PARTICIPAÇÃO COMO BANCA EXAMINADORA</i>.</li>
         <li>Cada documento abre em nova janela/aba para permitir impressão individual.</li>
     </ul>
 </div>
@@ -183,10 +183,10 @@ A Banca Examinadora, composta pelos professores: <b>${escapeHtml(presidente)}</b
 function gerarHtmlDeclaracao({tipo, professor, estudante, titulo, dataDefesa, coordenador}) {
     const verbos = {
         "orientação": "orientou o",
-        "co-orientação": "co-orientou o",
+        "coorientação": "coorientou o",
         "banca examinadora": "participou como membro da banca examinadora do"
     };
-    const tituloCabecalho = tipo.toUpperCase() === "CO-ORIENTAÇÃO" ? "DECLARAÇÃO DE CO-ORIENTAÇÃO" :
+    const tituloCabecalho = tipo.toUpperCase() === "COORIENTAÇÃO" ? "DECLARAÇÃO DE COORIENTAÇÃO" :
                             tipo.toUpperCase() === "ORIENTAÇÃO" ? "DECLARAÇÃO DE ORIENTAÇÃO" :
                             "DECLARAÇÃO DE PARTICIPAÇÃO COMO BANCA EXAMINADORA";
 
@@ -266,14 +266,14 @@ function abrirDeclaracoesIndividuais() {
     // Coorientador (opcional)
     if (c.coorientador) {
         const htmlCoor = gerarHtmlDeclaracao({
-            tipo: "co-orientação",
+            tipo: "coorientação",
             professor: c.coorientador,
             estudante: c.aluno,
             titulo: c.titulo,
             dataDefesa: c.data,
             coordenador: c.coordenador || ""
         });
-        openDocWindow(htmlCoor, "Declaração de Co-Orientação - " + c.coorientador);
+        openDocWindow(htmlCoor, "Declaração de Coorientação - " + c.coorientador);
     }
 
     // Membro 1
@@ -328,14 +328,14 @@ function gerarTudo() {
     // abrir coorientador (se tiver)
     if (c.coorientador) {
         const htmlCoor = gerarHtmlDeclaracao({
-            tipo: "co-orientação",
+            tipo: "coorientação",
             professor: c.coorientador,
             estudante: c.aluno,
             titulo: c.titulo,
             dataDefesa: c.data,
             coordenador: c.coordenador || ""
         });
-        openDocWindow(htmlCoor, "Declaração de Co-Orientação - " + c.coorientador);
+        openDocWindow(htmlCoor, "Declaração de Coorientação - " + c.coorientador);
     }
 
     // membros da banca
