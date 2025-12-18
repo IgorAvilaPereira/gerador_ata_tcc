@@ -166,7 +166,7 @@ function openDocWindow(htmlContent, winTitle) {
 /* Gera o HTML da ATA */
 function gerarHtmlAta({aluno, titulo, data, horario, presidente, membro1, membro2, resultadoTexto, nota}) {
     return `
-<center><img src="https://ifrs.edu.br/wp-content/uploads/2022/08/Logo-IFRS-cores-fundo-branco-Horizontal.jpg" width="250px" alt="Logo IFRS"></center>
+<center><img src="logo.jpg" width="250px" alt="Logo IFRS"></center>
 <center><h2>Ata de Defesa Final de TCC<br>Tecnologia em Análise e Desenvolvimento de Sistemas</h2></center>
 <p style="text-align:justify;">
 Aos ${data}, no horário das ${horario} horas, nas dependências do Instituto Federal de Educação, Ciência e Tecnologia do Rio Grande do Sul, foi realizada a defesa pública do Trabalho de Conclusão de Curso (TCC) do(a) aluno(a) <b>${escapeHtml(aluno)}</b>, intitulado <b>${escapeHtml(titulo)}</b>.
@@ -191,7 +191,7 @@ function gerarHtmlDeclaracao({tipo, professor, estudante, titulo, dataDefesa, co
                             "DECLARAÇÃO DE PARTICIPAÇÃO COMO BANCA EXAMINADORA";
 
     return `
-<center><img src="https://ifrs.edu.br/wp-content/uploads/2022/08/Logo-IFRS-cores-fundo-branco-Horizontal.jpg" width="300px" alt="Logo IFRS"></center>
+<center><img src="logo.jpg" width="300px" alt="Logo IFRS"></center>
 <h2 style="text-align:center;">${tituloCabecalho}<br>DE TRABALHO DE CONCLUSÃO DE CURSO</h2>
 <p style="text-align:justify;">
 A Coordenação do Curso Superior de Tecnologia em Análise e Desenvolvimento de Sistemas do Instituto Federal de Ciência e Tecnologia do Rio Grande do Sul - Campus Rio Grande, declara para os devidos fins que <b>${escapeHtml(professor)}</b> ${verbos[tipo]} trabalho de conclusão de curso de <b>${escapeHtml(estudante)}</b>, intitulado <b>${escapeHtml(titulo)}</b>, com defesa realizada no dia ${escapeHtml(dataDefesa)}, nas dependências do Instituto Federal de Educação, Ciência e Tecnologia do Rio Grande do Sul no Campus Rio Grande.
